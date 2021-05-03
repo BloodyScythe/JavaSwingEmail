@@ -1,8 +1,14 @@
 package com.dhruvmail.email_dbms;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Properties;
+import java.util.Scanner;
 
+//email packages 
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -12,22 +18,104 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+//database package
+import java.sql.*;
+//pdf package
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class App {
 	public static void main(String[] args) {
 		
 		System.out.println("preparing to send message ...");
-		String message = "Hello , Dear, this is message for security check . ";
-		String subject = "CodersArea : Confirmation";
-		String to = "kaithdhruv@gmail.com";
+		String message = "This is a computer generated email, it won't accept replies ";
+		String subject = "This is the subject";
+		//String to = "kaithdhruv@gmail.com";
 		String from = "carbonatedfiji@gmail.com ";
 		
-//		sendEmail(message,subject,to,from);
-		sendAttach(message,subject,to,from);
+		//JDBC url and user password for databsse connection
+		String jdbcURL = "jdbc:postgresql://localhost:5432/email";
+		String username = "postgres";
+        String password = "dhruvkaith";
+       
+        Scanner sc= new Scanner(System.in); 
+
+        //specifing where we want to create pdf
+        String filename = "A:\\email\\pdf\\new.pdf";
+        Document document = new Document();
+        
+        System.out.println("Enter client's name: ");
+        String name= sc.nextLine();  
+        System.out.println("Enter client's email: ");
+        String client_email= sc.nextLine();  
+       
+        
+ try {
+        	
+        	OutputStream file = new FileOutputStream(new File(filename));
+            //PdfWriter.getInstance(document, new FileOutputStream(new File(filename)));
+            PdfWriter.getInstance(document, file);
+            document.open();
+         
+           Paragraph p = new Paragraph();
+            p.add("Name "+ name);
+          //  p.setAlignment(Element.ALIGN_CENTER);
+            document.add(p);
+            Paragraph p2 = new Paragraph();
+            p2.add("Your email "+client_email); //no alignment
+            p2.add("Recieved from CarbonatedFiji");
+            document.add(p2);
+            Font f = new Font();
+            f.setStyle(Font.BOLD);
+            f.setSize(8);
+            document.add(new Paragraph("This is my paragraph 3", f));
+           // document.add(Image.getInstance("A:\\sample.png"));
+            document.close();
+            System.out.println("PDF generated");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
+        
+       try {
+    	   Connection connection =  DriverManager.getConnection(jdbcURL, username, password);
+    	   System.out.println("Connected ");
+    	   
+    	   String sql = "INSERT INTO record(Name, File, recipient) VALUES (?,?,?)";
+    	   
+    	   //Statement statement = connection.createStatement();
+    	   PreparedStatement pstmt = connection.prepareStatement(sql);
+    	   
+    	   pstmt.setString(1, name);
+    	   FileInputStream fis = new FileInputStream("A:\\email\\pdf\\new.pdf");
+    	   pstmt.setBinaryStream(2, fis,fis.available());
+    	   pstmt.setString(3, client_email);
+    	   pstmt.executeUpdate();
+    	 /*  int rows = statement.executeUpdate(sql);
+    	   if (rows > 0) {
+    		   System.out.print("A new entry is entered");
+    	   }*/
+    	   connection.close();
+
+       } catch(SQLException | IOException e) {
+    	   System.out.println("Error in connecting to databse");
+    	   e.printStackTrace();
+       }
+	
+		
+		
+		//sendEmail(message,subject,to,from);
+		sendAttach(message,subject,client_email,from);
 	}
 
+	
+	
+	
 	//this is responsible to send the message with attachment
-	private static void sendAttach(String message, String subject, String to, String from) {
+	
+	
+	private static void sendAttach(String message, String subject, String client_email, String from) {
 
 		//Variable for gmail
 		String host="smtp.gmail.com";
@@ -66,7 +154,7 @@ public class App {
 		m.setFrom(from);
 		
 		//adding recipient to message
-		m.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		m.addRecipient(Message.RecipientType.TO, new InternetAddress(client_email));
 		
 		//adding subject to message
 		m.setSubject(subject);
@@ -74,8 +162,8 @@ public class App {
 		
 		//attachement..
 		
-		//file path
-		String path="C:\\Users\\Dhruv\\Desktop\\sample.png";
+		//attachment path
+		String path="A:\\email\\pdf\\new.pdf";
 		
 		
 		MimeMultipart mimeMultipart = new MimeMultipart();
@@ -118,20 +206,13 @@ public class App {
 			e.printStackTrace();
 		}
 		
-		
-		
-		
-		
-		
-		
-	
 		System.out.println("Sent success...................");
 		
 		
 	}
 
 	//this is responsible to send email..
-	private static void sendEmail(String message, String subject, String to, String from) {
+	private static void sendEmail(String message, String subject, String client_email, String from) {
 		
 		//Variable for gmail
 		String host="smtp.gmail.com";
@@ -170,7 +251,7 @@ public class App {
 		m.setFrom(from);
 		
 		//adding recipient to message
-		m.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+		m.addRecipient(Message.RecipientType.TO, new InternetAddress(client_email));
 		
 		//adding subject to message
 		m.setSubject(subject);
