@@ -2,9 +2,11 @@ package com.dhruvmail.email_dbms;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -30,8 +32,8 @@ public class App {
 	public static void main(String[] args) {
 		
 		System.out.println("preparing to send message ...");
-		String message = "This is a computer generated email, it won't accept replies ";
-		String subject = "This is the subject";
+		//String message = "This is a computer generated email, it won't accept replies ";
+		//String subject = "This is the subject";
 		//String to = "kaithdhruv@gmail.com";
 		String from = "carbonatedfiji@gmail.com ";
 		
@@ -43,36 +45,105 @@ public class App {
         Scanner sc= new Scanner(System.in); 
 
         //specifing where we want to create pdf
-        String filename = "A:\\email\\pdf\\new.pdf";
-        Document document = new Document();
+       // String filename = "A:\\email\\pdf\\new.pdf";
+       // Document document = new Document();
         
         System.out.println("Enter client's name: ");
         String name= sc.nextLine();  
         System.out.println("Enter client's email: ");
         String client_email= sc.nextLine();  
-       
+        System.out.println("Enter subject of Email ");
+        String subject= sc.nextLine();  
+        System.out.println("Enter message of mail ");
+        String message= sc.nextLine();  
         
  try {
         	
-        	OutputStream file = new FileOutputStream(new File(filename));
-            //PdfWriter.getInstance(document, new FileOutputStream(new File(filename)));
-            PdfWriter.getInstance(document, file);
-            document.open();
-         
-           Paragraph p = new Paragraph();
-            p.add("Name "+ name);
-          //  p.setAlignment(Element.ALIGN_CENTER);
-            document.add(p);
-            Paragraph p2 = new Paragraph();
-            p2.add("Your email "+client_email); //no alignment
-            p2.add("Recieved from CarbonatedFiji");
-            document.add(p2);
-            Font f = new Font();
-            f.setStyle(Font.BOLD);
-            f.setSize(8);
-            document.add(new Paragraph("This is my paragraph 3", f));
-           // document.add(Image.getInstance("A:\\sample.png"));
-            document.close();
+	    String filename = "A:\\email\\pdf\\invoice.pdf";
+		Rectangle pageSize = new Rectangle(780, 525);
+		Document document = new Document(pageSize);
+		OutputStream file = null;
+		try {
+			file = new FileOutputStream(new File(filename));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		PdfWriter.getInstance(document, file);
+		//PdfWriter.getInstance(document, response.getOutputStream());
+		document.open();
+		float[] colsWidth1 = {1f, 1f, 1f,1f,1f}; // Code 1
+		//Image image = Image.getInstance(path+"employee/payslip/view/fly-hind.jpg");
+		PdfPTable table = new PdfPTable(colsWidth1);
+		table.getDefaultCell().setBorder(0);
+		table.setWidthPercentage(100); // Code 2
+		table.setHorizontalAlignment(Element.ALIGN_LEFT);//Code 3
+		table.addCell("");
+		table.addCell("");
+		table.addCell("This is a genaric PDF also");
+		table.addCell("");
+		table.addCell("");
+		document.add(table);
+		document.add( Chunk.NEWLINE );
+		document.add( Chunk.NEWLINE );
+		float[] colsWidth_main = {1f, 1f, 1f}; // Code 1
+		table = new PdfPTable(colsWidth_main);
+		table.getDefaultCell().setBorder(0);
+		table.setWidthPercentage(100); // Code 2
+		table.setHorizontalAlignment(Element.ALIGN_LEFT);//Code 3
+		table.addCell("");
+		try {
+			table.addCell(Image.getInstance("A:\\email\\images\\birds.jpg"));
+		} catch (BadElementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		table.addCell("");
+		document.add(table);
+		float[] colsWidth = {1f, 1f, 1f, 1f}; // Code 1
+		table = new PdfPTable(colsWidth);
+		table.getDefaultCell().setBorder(0);
+		table.setWidthPercentage(100); // Code 2
+		table.setHorizontalAlignment(Element.ALIGN_LEFT);//Code 3
+		//table.addCell("Employee ID");
+		//table.addCell("00000");
+		table.addCell("Name");
+		table.addCell(name);
+		table.addCell("Recieved from");
+		table.addCell("carbonatedfiji");
+		table.addCell("00000");
+		table.addCell("00000");
+		table.addCell("Email of sender");
+		table.addCell("CarbonatedFiji@gmail.com");
+		table.addCell("This is a gernaric table heading");
+		table.addCell("0000");
+		table.addCell("This is a gernaric table heading");
+		table.addCell("0000");
+
+		
+		document.add(table);
+		document.add( Chunk.NEWLINE );
+		document.add( Chunk.NEWLINE );
+		
+		Paragraph p = new Paragraph();
+		//p.add("This is a genaric sentance");
+		
+     //  p.setAlignment(Element.ALIGN_CENTER);
+     document.add(p);
+     Paragraph p2 = new Paragraph();
+     p2.add("The birds on the top are a JPG "); //no alignment
+ 	document.add( Chunk.NEWLINE );
+    
+     document.add(p2);
+	
+		document.close();
+
             System.out.println("PDF generated");
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +153,7 @@ public class App {
     	   Connection connection =  DriverManager.getConnection(jdbcURL, username, password);
     	   System.out.println("Connected ");
     	   
-    	   String sql = "INSERT INTO record(Name, File, recipient) VALUES (?,?,?)";
+    	   String sql = "INSERT INTO record(Name, File, recipient, subject, message) VALUES (?,?,?,?,?)";
     	   
     	   //Statement statement = connection.createStatement();
     	   PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -91,6 +162,8 @@ public class App {
     	   FileInputStream fis = new FileInputStream("A:\\email\\pdf\\new.pdf");
     	   pstmt.setBinaryStream(2, fis,fis.available());
     	   pstmt.setString(3, client_email);
+    	   pstmt.setString(4, subject);
+    	   pstmt.setString(5, message);
     	   pstmt.executeUpdate();
     	 /*  int rows = statement.executeUpdate(sql);
     	   if (rows > 0) {
