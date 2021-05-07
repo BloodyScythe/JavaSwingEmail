@@ -58,7 +58,7 @@ public class App {
         String message= sc.nextLine();  
         
  try {
-        	
+        //save pdf as	
 	    String filename = "A:\\email\\pdf\\invoice.pdf";
 		Rectangle pageSize = new Rectangle(780, 525);
 		Document document = new Document(pageSize);
@@ -159,7 +159,7 @@ public class App {
     	   PreparedStatement pstmt = connection.prepareStatement(sql);
     	   
     	   pstmt.setString(1, name);
-    	   FileInputStream fis = new FileInputStream("A:\\email\\pdf\\new.pdf");
+    	   FileInputStream fis = new FileInputStream("A:\\email\\pdf\\invoice.pdf");
     	   pstmt.setBinaryStream(2, fis,fis.available());
     	   pstmt.setString(3, client_email);
     	   pstmt.setString(4, subject);
@@ -211,9 +211,6 @@ public class App {
 			protected PasswordAuthentication getPasswordAuthentication() {				
 				return new PasswordAuthentication("carbonatedfiji@gmail.com", "f4yeV@lentine");
 			}
-			
-			
-			
 		});
 		
 		session.setDebug(true);
@@ -236,7 +233,7 @@ public class App {
 		//attachement..
 		
 		//attachment path
-		String path="A:\\email\\pdf\\new.pdf";
+		String path="A:\\email\\pdf\\invoice.pdf";
 		
 		
 		MimeMultipart mimeMultipart = new MimeMultipart();
@@ -264,7 +261,6 @@ public class App {
 			e.printStackTrace();
 		}
 		
-		
 		m.setContent(mimeMultipart);
 		
 		
@@ -272,14 +268,11 @@ public class App {
 		
 		//Step 3 : send the message using Transport class
 		Transport.send(m);
-		
-		
-		
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println("Sent success...................");
+		System.out.println("Sent success");
 		
 		
 	}
@@ -338,7 +331,7 @@ public class App {
 		//Step 3 : send the message using Transport class
 		Transport.send(m);
 		
-		System.out.println("Sent success...................");
+		System.out.println("Email sent succesfully");
 		
 		
 		}catch (Exception e) {
