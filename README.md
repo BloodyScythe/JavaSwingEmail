@@ -9,3 +9,7 @@ A simple java GUI application to send email with attachments
 3. PostgreSQl 4.8
 4. iTextPDF 5.10
 
+**To access sent attachments execute following command in pgAdmin of PostgresSQL**
+
+``COPY (SELECT file FROM record ) TO 'PATH' (FORMAT binary)``
+
