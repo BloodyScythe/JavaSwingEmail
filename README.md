@@ -1,1 +1,3 @@
-# Java_dbms
+# Java Email sender
+
+A simple java GUI application to send email with attachments
