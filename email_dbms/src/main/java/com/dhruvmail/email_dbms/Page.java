@@ -59,7 +59,7 @@ public class Page implements ActionListener{
 	JLabel clinetEmaillabel = new JLabel("Email :");
 	JLabel subjectLabel	= new JLabel("Subject: ");
 	JLabel messageLabel = new JLabel("Message: ");
-	static JProgressBar bar = new JProgressBar();
+	JProgressBar bar = new JProgressBar();
 	
 	
 	String jdbcURL = "jdbc:postgresql://localhost:5432/email";
@@ -69,12 +69,13 @@ public class Page implements ActionListener{
     
 	Page(){
 		
-		bar.setValue(0);
+		//bar.setValue(0);
+		bar.setString("");
 		bar.setBounds(60,520,320,25);
 		bar.setStringPainted(true);
 		bar.setFont(new Font("MV Boli",Font.BOLD,25));
 		bar.setForeground(Color.green);
-		bar.setBackground(Color.black);
+		bar.setBackground(Color.red);
 		
 		clinetNamelabel.setBounds(4,50,20,25);
 		clinetNamelabel.setFont(new Font(null,Font.BOLD,10));
@@ -123,6 +124,8 @@ public class Page implements ActionListener{
 		frame.setLayout(null);
 		frame.setVisible(true);
 		frame.setResizable(false);
+		
+		
 	}
 	
 	
@@ -142,15 +145,33 @@ public class Page implements ActionListener{
 			clientEmail.setText("");
 			messageBox.setText("");
 			subject.setText("");
-			
+			bar.setString("ACTIVE!");
 		*/
+			bar.setString("ACTIVE!");
 			String clientmail= clientEmailTxt.getText();
 			String []ArrEmail = clientmail.split(",");
 			String Clinetname= clientNameTxt.getText();
 			String messageBox = messageBoxTxt.getText();
 			String subject = subjectTxt.getText();
 			String from = "Carbonatedfiji@gmail.com";
+			/*int counter = 0;
+			while(counter<=100) {
+				bar.setValue(counter);
+				try {
+					Thread.sleep(50);
+				}catch(InterruptedException e3) {
+					e3.printStackTrace();
+				}
+				counter +=1;
+			}*/
 			
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e1) {
+				
+				e1.printStackTrace();
+			}
+			bar.setString("Email sent!");
 			try {
 		        //save pdf as	
 			    String filename = "A:\\email\\pdf\\invoice.pdf";
@@ -239,7 +260,7 @@ public class Page implements ActionListener{
 				document.close();
 
 		            System.out.println("PDF generated");
-		            bar.setString("PDF generated");
+		           
 		        } catch (Exception e1) {
 		            e1.printStackTrace();
 		        } 
@@ -247,7 +268,7 @@ public class Page implements ActionListener{
 		       try {
 		    	   Connection connection =  DriverManager.getConnection(jdbcURL, username, password);
 		    	   System.out.println("Connected ");
-		    	   bar.setString("Connected to DB");
+		   
 		    	   String sql = "INSERT INTO record(Name, File, recipient, subject, message) VALUES (?,?,?,?,?)";
 		    	   
 		    	   //Statement statement = connection.createStatement();
@@ -283,18 +304,7 @@ public class Page implements ActionListener{
 		
 		private static void sendAttach(String message, String subject, String client_email, String from, String[] ArrEmail) {
 			for(String singleEmail:ArrEmail){
-				/*
-				int counter=0;
-				while(counter<=100) {
-					bar.setValue(counter);
-					try {
-						Thread.sleep(50);
-					}catch(InterruptedException e) {
-						e.printStackTrace();
-					}
-					counter +=1;
-				}
-				*/
+				
 			//Variable for gmail
 			String host="smtp.gmail.com";
 			
@@ -379,9 +389,9 @@ public class Page implements ActionListener{
 			}
 			
 			System.out.println("Sent success");
-			bar.setString("Email sent!");
+			
 			}	
-			bar.setString("Done!");
+			
 		}
 
 		//this is responsible to send email..
