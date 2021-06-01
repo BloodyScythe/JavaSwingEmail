@@ -13,3 +13,8 @@ A simple java GUI application to send email with attachments
 
 ``COPY (SELECT file FROM record ) TO 'PATH' (FORMAT binary)``
 
+ADD your own email and password to the program
+
+Enable login of unsecure apps on your email account
+
+
