@@ -324,7 +324,7 @@ public class Page implements ActionListener{
 			Session session=Session.getInstance(properties, new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {				
-					return new PasswordAuthentication("carbonatedfiji@gmail.com", "f4yeV@lentine");
+					return new PasswordAuthentication("**@gmail.com", "password");
 				}
 			});
 			
