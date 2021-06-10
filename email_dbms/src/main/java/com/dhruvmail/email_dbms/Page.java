@@ -389,74 +389,7 @@ public class Page implements ActionListener{
 			}
 			
 			System.out.println("Sent success");
-			
 			}	
-			
 		}
-
-		//this is responsible to send email..
-		private static void sendEmail(String message, String subject, String client_email, String from) {
-			
-			//Variable for gmail
-			String host="smtp.gmail.com";
-			
-			//get the system properties
-			Properties properties = System.getProperties();
-			System.out.println("PROPERTIES "+properties);
-			
-			//setting important information to properties object
-			
-			//host set
-			properties.put("mail.smtp.host", host);
-			properties.put("mail.smtp.port","465");
-			properties.put("mail.smtp.ssl.enable","true");
-			properties.put("mail.smtp.auth","true");
-			
-			//Step 1: to get the session object..
-			Session session=Session.getInstance(properties, new Authenticator() {
-				@Override
-				protected PasswordAuthentication getPasswordAuthentication() {				
-					return new PasswordAuthentication("carbonatedfiji@gmail.com", "f4yeV@lentine");
-				}
-				
-				
-				
-			});
-			
-			session.setDebug(true);
-			
-			//Step 2 : compose the message [text,multi media]
-			MimeMessage m = new MimeMessage(session);
-			
-			try {
-			
-			//from email
-			m.setFrom(from);
-			
-			//adding recipient to message
-			m.addRecipient(Message.RecipientType.TO, new InternetAddress(client_email));
-			
-			//adding subject to message
-			m.setSubject(subject);
-		
-			
-			//adding text to message
-			m.setText(message);
-			
-			//send 
-			
-			//Step 3 : send the message using Transport class
-			Transport.send(m);
-			
-			System.out.println("Email sent succesfully");
-			
-			
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-				
-		
-		
-		}
-	}
+}
 	
