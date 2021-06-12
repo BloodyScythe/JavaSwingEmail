@@ -47,7 +47,9 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class Page implements ActionListener{
+	
 
+	
 	JFrame frame = new JFrame();
 	JButton sendBtn = new JButton("send");
 	JButton resetButton = new JButton("Reset");
@@ -69,13 +71,12 @@ public class Page implements ActionListener{
     
 	Page(){
 		
-		//bar.setValue(0);
-		bar.setString("");
+		bar.setString("IDLE");
 		bar.setBounds(60,520,320,25);
 		bar.setStringPainted(true);
 		bar.setFont(new Font("MV Boli",Font.BOLD,25));
-		bar.setForeground(Color.green);
-		bar.setBackground(Color.red);
+		bar.setForeground(Color.red);
+		//bar.setBackground(Color.red);
 		
 		clinetNamelabel.setBounds(4,50,20,25);
 		clinetNamelabel.setFont(new Font(null,Font.BOLD,10));
@@ -124,8 +125,23 @@ public class Page implements ActionListener{
 		frame.setLayout(null);
 		frame.setVisible(true);
 		frame.setResizable(false);
+		int counter = 0;
+		while(counter<=100) {
+			bar.setForeground(Color.green);
+			bar.setBackground(Color.red);
+			bar.setString("..Connecting..");
+			bar.setValue(counter);
+			try {
+				Thread.sleep(20);
+				
+			}catch(InterruptedException e3) {
+				e3.printStackTrace();
+			}
+			counter +=1;
+		}
 		
-		
+		bar.setString("ACTIVE!");
+		bar.setBackground(Color.green);
 	}
 	
 	
@@ -147,13 +163,15 @@ public class Page implements ActionListener{
 			subject.setText("");
 			bar.setString("ACTIVE!");
 		*/
-			bar.setString("ACTIVE!");
+			
 			String clientmail= clientEmailTxt.getText();
 			String []ArrEmail = clientmail.split(",");
 			String Clinetname= clientNameTxt.getText();
 			String messageBox = messageBoxTxt.getText();
 			String subject = subjectTxt.getText();
 			String from = "Carbonatedfiji@gmail.com";
+			bar.setBackground(Color.green);
+			
 			/*int counter = 0;
 			while(counter<=100) {
 				bar.setValue(counter);
@@ -164,14 +182,6 @@ public class Page implements ActionListener{
 				}
 				counter +=1;
 			}*/
-			
-			try {
-				Thread.sleep(50);
-			} catch (InterruptedException e1) {
-				
-				e1.printStackTrace();
-			}
-			bar.setString("Email sent!");
 			try {
 		        //save pdf as	
 			    String filename = "A:\\email\\pdf\\invoice.pdf";
@@ -188,7 +198,7 @@ public class Page implements ActionListener{
 				//PdfWriter.getInstance(document, response.getOutputStream());
 				document.open();
 				float[] colsWidth1 = {1f, 1f, 1f,1f,1f}; // Code 1
-				//Image image = Image.getInstance(path+"employee/payslip/view/fly-hind.jpg");
+			
 				PdfPTable table = new PdfPTable(colsWidth1);
 				table.getDefaultCell().setBorder(0);
 				table.setWidthPercentage(100); // Code 2
@@ -268,7 +278,7 @@ public class Page implements ActionListener{
 		       try {
 		    	   Connection connection =  DriverManager.getConnection(jdbcURL, username, password);
 		    	   System.out.println("Connected ");
-		   
+		    	   bar.setString("Active!");
 		    	   String sql = "INSERT INTO record(Name, File, recipient, subject, message) VALUES (?,?,?,?,?)";
 		    	   
 		    	   //Statement statement = connection.createStatement();
@@ -297,6 +307,9 @@ public class Page implements ActionListener{
 				
 				//sendEmail(message,subject,to,from);
 				sendAttach(messageBox,subject,clientmail,from, ArrEmail);
+				
+				bar.setBackground(Color.green);
+				bar.setString("Sent!");
 			}
 	}
 		//this is responsible to send the message with attachment
@@ -320,11 +333,11 @@ public class Page implements ActionListener{
 			properties.put("mail.smtp.ssl.enable","true");
 			properties.put("mail.smtp.auth","true");
 			
-			//Step 1: to get the session object..
+			//Step 1: to get the session object
 			Session session=Session.getInstance(properties, new Authenticator() {
 				@Override
 				protected PasswordAuthentication getPasswordAuthentication() {				
-					return new PasswordAuthentication("**@gmail.com", "password");
+					return new PasswordAuthentication("carbonatedfiji@gmail.com", "f4yeV@lentine");
 				}
 			});
 			
@@ -389,7 +402,8 @@ public class Page implements ActionListener{
 			}
 			
 			System.out.println("Sent success");
+			
 			}	
+			
 		}
-}
-	
+	}
