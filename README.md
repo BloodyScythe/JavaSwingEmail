@@ -17,13 +17,19 @@ ADD your own email and password to the program
 
 Enable login of unsecure apps on your email account
 
+<h1> Screenshots </h1>
+
+![flow](/images/final.gif)
+![flow](/images/active.jpg)
+![flow](/images/sent.jpg)
+![flow](/images/3.jpg)
+
+
 <h1> Flowchart </h1>
 
 ![flow](/images/flow.svg)
 
-<h1> Screenshots </h1>
 
-![flow](/images/1.jpg)
-![flow](/images/2.jpg)
-![flow](/images/3.jpg)
+
+
 
